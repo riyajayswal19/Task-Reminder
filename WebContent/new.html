@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Farming Equipment Rental</title>
+</head>
+<body>
+    <h1>Farming Equipment Rental</h1>
+    <form id="searchForm">
+        <label for="search_query">Search Equipment:</label>
+        <input type="text" id="search_query" name="search_query" required><br>
+
+        <input type="submit" value="Search">
+    </form>
+
+    <div id="searchResults"></div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const searchQuery = document.getElementById("search_query").value;
+
+            // Validate the searchQuery here if needed
+
+            // Make an AJAX call to the backend
+            fetch("EquipmentSearchServlet?query=" + encodeURIComponent(searchQuery))
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server and display the search results
+                const searchResults = document.getElementById("searchResults");
+                searchResults.innerHTML = "";
+
+                data.forEach(equipment => {
+                    const equipmentDiv = document.createElement("div");
+                    equipmentDiv.textContent = equipment.name; // Display the equipment name, adjust as per your data
+                    searchResults.appendChild(equipmentDiv);
+                });
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the request
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
